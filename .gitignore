@@ -1,0 +1,8 @@
+/backup
+!/backup/keepme.txt
+/swap
+!/swap/keepme.txt
+/undo
+!/undo/keepme.txt
+/.netrwhist
+
