@@ -5,13 +5,16 @@ set nocompatible
 let g:pathogen_disabled = []
 execute pathogen#infect()
 
+" =============================================== "
+"                 Display options                 "
+" =============================================== "
+
 " Remove toolbar
 set guioptions-=T
 
 " Visuals
 let g:solarized_termcolors=256
 set t_Co=256
-set background=dark
 colorscheme solarized
 if has("gui_win32")
     set guifont=Consolas:h11:cANSI
@@ -25,14 +28,37 @@ set listchars=tab:»\ ,trail:·,extends:>,nbsp:.
 syntax on
 " Show line numbers
 set number
+" In case the last line of the window is long, display as much of it as possible
+" instead of '@' characters
+set display+=lastline
+
+
+
+" =============================================== "
+"                 Behaviour options               "
+" =============================================== "
+
+" Enable filetype detection and filetype-specific plugins and indentation rules
+filetype plugin indent on
+
+" Don't redraw screen while executing macros
+set lazyredraw
+
+" At startup, restore buffer list and some history
+"set viminfo='100,f1,<100,:100,h,%
+
+" Allow switching to another buffer without saving
+set hidden
+
+" List completion in command mode on second tab press
+set wildmode=longest:full,full
+set wildmenu
 
 " Location for backup files. Note the double slash to avoid name collisions.
 set backupdir=~/.vim/backup//
 set directory=~/.vim/swap//
 set undodir=~/.vim/undo//
 
-" Enable filetype detection and filetype-specific plugins and indentation rules
-filetype plugin indent on
 " When a file was changed outside of vim and not changed in vim, reread it
 set autoread
 
@@ -42,8 +68,13 @@ set shiftwidth=4
 set smarttab
 set expandtab
 
+
+set nrformats-=octal
+set autoindent
 " Intuitive backspace behavior
 set backspace=indent,eol,start
+" Delete comment character when joining commented lines
+set formatoptions+=j
 
 " Search
 set hlsearch
@@ -51,11 +82,11 @@ set incsearch
 set ignorecase
 set smartcase
 
-" Allow switching to another buffer without saving
-set hidden
 
-" List completion
-set wildmode=longest:list,full
+
+" =============================================== "
+"                 Key bindings                    "
+" =============================================== "
 
 " General key mappings
 let mapleader=" "
@@ -66,12 +97,17 @@ nnoremap <leader>h :noh<CR>
 " CD to the directory of current file
 nnoremap <leader>cd :cd %:p:h<CR>
 
+" Buffer navigation
+nnoremap <M-[> :bprev<CR>
+nnoremap <M-]> :bnext<CR>
 
 " Windows movement
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 nnoremap <C-h> <C-w>h
+
+
 
 " Filetype settings {{{
 " Markdown file type
