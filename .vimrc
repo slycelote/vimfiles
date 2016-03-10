@@ -1,8 +1,9 @@
 scriptencoding utf-8
 set encoding=utf-8
+" Remove all autocommands in case we are reloading this file
+au!
 
 set nocompatible
-let g:pathogen_disabled = []
 execute pathogen#infect()
 
 " =============================================== "
@@ -20,9 +21,20 @@ if has("gui_win32")
     set guifont=Consolas:h11:cANSI
 endif
 
+" Highlight current line
+set cursorline
+" Disable cursor blinking
+set guicursor+=a:blinkon0
+
 " Invisible characters
 set list
 set listchars=tab:»\ ,trail:·,extends:>,nbsp:.
+
+" Indicator of wrapping text
+set showbreak=↪
+
+" Show cursor coordinates
+set ruler
 
 " Syntax
 syntax on
