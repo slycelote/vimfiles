@@ -1,9 +1,9 @@
 scriptencoding utf-8
 set encoding=utf-8
+set nocompatible
 " Remove all autocommands in case we are reloading this file
 au!
 
-set nocompatible
 execute pathogen#infect()
 
 " =============================================== "
@@ -32,10 +32,8 @@ set listchars=tab:»\ ,trail:·,extends:>,nbsp:.
 
 " Indicator of wrapping text
 set showbreak=↪
-
 " Show cursor coordinates
 set ruler
-
 " Syntax
 syntax on
 " Show line numbers
@@ -62,8 +60,9 @@ set lazyredraw
 " Allow switching to another buffer without saving
 set hidden
 
-" List completion in command mode on second tab press
-set wildmode=longest:full,full
+" On the first tab press, display list and complete longest prefix;
+" on the second tab, display menu completion
+set wildmode=list:longest,full
 set wildmenu
 
 " Location for backup files. Note the double slash to avoid name collisions.
@@ -106,6 +105,7 @@ nnoremap j gj
 nnoremap k gk
 nnoremap <leader>q :bd<CR>
 nnoremap <leader>h :noh<CR>
+nnoremap <silent> <leader>ta :call <SID>ToggleFlag('formatoptions', 'a')<CR>
 " CD to the directory of current file
 nnoremap <leader>cd :cd %:p:h<CR>
 
@@ -113,7 +113,7 @@ nnoremap <leader>cd :cd %:p:h<CR>
 nnoremap <M-[> :bprev<CR>
 nnoremap <M-]> :bnext<CR>
 
-" Windows movement
+" Windows navigation
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
@@ -139,7 +139,7 @@ autocmd FileType text setlocal textwidth=78
 
 " Pretty print JSON (whole file or range)
 let g:python_exe = 'python'
-command! -range=% JsonPrettify exe '<line1>,<line2>!' . g:python_exe . ' -m json.tool'
+command! -range=% JsonFormat exe '<line1>,<line2>!' . g:python_exe . ' -m json.tool'
 
 " When editing a file, jump to the last known cursor position.
 autocmd BufWinEnter *
@@ -176,6 +176,15 @@ endfun
 command! -nargs=1 -complete=custom,ListProjects LoadProject source <args>
 
 
+function! <SID>ToggleFlag(option, flag)
+    exec ('let lopt = &' . a:option)
+    if lopt =~ (".*" . a:flag . ".*")
+        exec 'setlocal' (a:option . '-=' . a:flag)
+    else
+        exec 'setlocal' (a:option . '+=' . a:flag)
+    endif
+endfunction
+
 " cscope and ctags {{{
 "   search tags file in the directory of current file and upwards to root
 set tags=./tags;
@@ -200,6 +209,8 @@ let g:buftabline_numbers=1 " display buffer numbers
 "call buftabline#update(0)  " reload buftabline settings when reloading .vimrc
 
 " CtrlP settings
+"   max height of match window
+let g:ctrlp_match_window = 'max:20'
 "   search only by filename, instead of filename and path; can be toggled with <c-d>
 let g:ctrlp_by_filename = 1
 "   don't update file list on every keypress
@@ -207,6 +218,8 @@ let g:ctrlp_lazy_update = 1
 "   allow jumping to tag
 let g:ctrlp_extensions = ['tag']
 nnoremap <leader>t :CtrlPTag<CR>
+"   buffer list
+nnoremap <leader>b :CtrlPBuffer<CR>
 "   ignore patterns, only used if ctrlp_user_command is not used
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '\v[\/](\.git|\.hg|\.svn)$',
