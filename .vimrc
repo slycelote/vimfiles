@@ -191,6 +191,9 @@ nnoremap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
 
 " Plugin settings {{{
 
+" fswitch settings
+nnoremap <silent> <leader>f :FSHere<CR>
+
 " buftabline settings
 let g:buftabline_show=1    " show only if at least 2 buffers
 let g:buftabline_numbers=1 " display buffer numbers
