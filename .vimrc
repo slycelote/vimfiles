@@ -14,11 +14,12 @@ execute pathogen#infect()
 set guioptions-=T
 
 " Visuals
-let g:solarized_termcolors=256
 set t_Co=256
+let g:solarized_termcolors=256
 colorscheme solarized
+set background=dark
 if has("gui_win32")
-    set guifont=Consolas:h11:cANSI
+    set guifont=Consolas:h11
 endif
 
 " Highlight current line
@@ -30,8 +31,12 @@ set guicursor+=a:blinkon0
 set list
 set listchars=tab:»\ ,trail:·,extends:>,nbsp:.
 
-" Indicator of wrapping text
-set showbreak=↪
+if !has("win32")
+    " Indicator of wrapping text; default Windows fonts don't have a nice
+    " glyph for this.
+    set showbreak=↪
+endif
+
 " Show cursor coordinates
 set ruler
 " Syntax
