@@ -110,7 +110,7 @@ nnoremap j gj
 nnoremap k gk
 nnoremap <leader>q :bd<CR>
 nnoremap <leader>h :noh<CR>
-nnoremap <silent> <leader>ta :call <SID>ToggleFlag('formatoptions', 'a')<CR>
+nnoremap <silent> <leader>ca :call <SID>ToggleFlag('formatoptions', 'a')<CR>
 " CD to the directory of current file
 nnoremap <leader>cd :cd %:p:h<CR>
 
