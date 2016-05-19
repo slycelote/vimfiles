@@ -59,6 +59,9 @@ filetype plugin indent on
 " Don't redraw screen while executing macros
 set lazyredraw
 
+" Sensible scrolling when no wrapping
+set sidescroll=1
+
 " At startup, restore buffer list and some history
 "set viminfo='100,f1,<100,:100,h,%
 
@@ -106,11 +109,15 @@ set smartcase
 
 " General key mappings
 let mapleader=" "
-nnoremap j gj
-nnoremap k gk
+
+" Move through wrapped lines unless the command is given a count
+nnoremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
+nnoremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
+
 nnoremap <leader>q :bd<CR>
 nnoremap <leader>h :noh<CR>
 nnoremap <silent> <leader>ca :call <SID>ToggleFlag('formatoptions', 'a')<CR>
+
 " CD to the directory of current file
 nnoremap <leader>cd :cd %:p:h<CR>
 
@@ -125,7 +132,6 @@ nnoremap <C-l> <C-w>l
 nnoremap <C-h> <C-w>h
 
 
-
 " Filetype settings {{{
 " Markdown file type
 autocmd BufRead,BufNewFile *.md set filetype=markdown
@@ -134,6 +140,12 @@ autocmd FileType markdown
   \ setlocal textwidth=78 |
   \ setlocal formatoptions+=a |
   \ let b:noStripWhitespace=1
+
+" asciidoc file type
+autocmd BufRead,BufNewFile *.adoc set filetype=asciidoc
+autocmd FileType asciidoc
+  \ setlocal spell |
+  \ setlocal textwidth=78
 
 " vim file type
 autocmd FileType vim let b:noStripWhitespace=1
