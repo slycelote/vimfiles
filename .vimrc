@@ -53,6 +53,10 @@ set display+=lastline
 "                 Behaviour options               "
 " =============================================== "
 
+" Disable beeping and flashing
+set noerrorbells visualbell t_vb=
+autocmd GUIEnter * set visualbell t_vb=
+
 " Enable filetype detection and filetype-specific plugins and indentation rules
 filetype plugin indent on
 
@@ -136,22 +140,24 @@ nnoremap <C-h> <C-w>h
 " Markdown file type
 autocmd BufRead,BufNewFile *.md set filetype=markdown
 autocmd FileType markdown
-  \ setlocal spell |
-  \ setlocal textwidth=78 |
-  \ setlocal formatoptions+=a |
+  \ setlocal spell textwidth=78 formatoptions+=a |
   \ let b:noStripWhitespace=1
 
 " asciidoc file type
 autocmd BufRead,BufNewFile *.adoc set filetype=asciidoc
 autocmd FileType asciidoc
-  \ setlocal spell |
-  \ setlocal textwidth=78
+  \ setlocal spell textwidth=78 formatoptions+=n
+  \ formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\\|^\\s*<\\d\\+>\\s\\+\\\\|^\\s*[a-zA-Z.]\\.\\s\\+\\\\|^\\s*[ivxIVX]\\+\\.\\s\\+
+  \ comments=s1:/*,ex:*/,://,b:#,:%,:XCOMM,fb:-,fb:*,fb:+,fb:.,fb:>
 
-" vim file type
-autocmd FileType vim let b:noStripWhitespace=1
+" yaml file type
+autocmd FileType yaml setlocal tabstop=2 shiftwidth=2
 
 " text file type
-autocmd FileType text setlocal textwidth=78
+autocmd FileType text setlocal spell textwidth=78
+
+" help windows
+autocmd FileType help setlocal nospell
 " }}}
 
 " Pretty print JSON (whole file or range)
