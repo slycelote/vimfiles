@@ -13,11 +13,7 @@ execute pathogen#infect()
 " Remove toolbar
 set guioptions-=T
 
-" Visuals
-set t_Co=256
-let g:solarized_termcolors=256
-colorscheme solarized
-set background=dark
+colorscheme apprentice
 if has("gui_win32")
     set guifont=Consolas:h11
 endif
