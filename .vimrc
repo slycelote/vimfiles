@@ -53,8 +53,18 @@ set display+=lastline
 set noerrorbells visualbell t_vb=
 autocmd GUIEnter * set visualbell t_vb=
 
+" Don't use 'magic vim comments'
+set nomodeline
+
 " Enable filetype detection and filetype-specific plugins and indentation rules
 filetype plugin indent on
+set autoindent
+
+" Show partial commands as you type
+set showcmd
+
+" Briefly show matching brackets in insert mode
+set showmatch
 
 " Don't redraw screen while executing macros
 set lazyredraw
@@ -87,9 +97,9 @@ set shiftwidth=4
 set smarttab
 set expandtab
 
-
+" Do not recognize octal numbers for Ctrl-A and Ctrl-X
 set nrformats-=octal
-set autoindent
+
 " Intuitive backspace behavior
 set backspace=indent,eol,start
 " Delete comment character when joining commented lines
@@ -114,7 +124,7 @@ let mapleader=" "
 nnoremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 nnoremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 
-nnoremap <leader>q :bd<CR>
+nnoremap <leader>w :bd<CR>
 nnoremap <leader>h :noh<CR>
 nnoremap <silent> <leader>ca :call <SID>ToggleFlag('formatoptions', 'a')<CR>
 
@@ -151,6 +161,12 @@ autocmd FileType yaml setlocal tabstop=2 shiftwidth=2
 
 " text file type
 autocmd FileType text setlocal spell textwidth=78
+
+" c++ file type
+autocmd FileType cpp setlocal commentstring=//\ %s
+
+" Firefox extensions install manifest
+autocmd FileType rdf set filetype=xml
 
 " help windows
 autocmd FileType help setlocal nospell
@@ -208,9 +224,9 @@ endfunction
 "   search tags file in the directory of current file and upwards to root
 set tags=./tags;
 "   use both ctags and cscope for definition searches
-set cst
+set cscopetag
 "   prefer ctags to cscope
-set csto=1
+set cscopetagorder=1
 "   bring up 'goto definition' dialog; faster than CtrlPTag (see below), but more false positives
 nnoremap <leader>cg :cs find g<Space>
 
