@@ -10,18 +10,10 @@ execute pathogen#infect()
 "                 Display options                 "
 " =============================================== "
 
-" Remove toolbar
-set guioptions-=T
-
 colorscheme apprentice
 if has("gui_win32")
     set guifont=Consolas:h11
 endif
-
-" Highlight current line
-set cursorline
-" Disable cursor blinking
-set guicursor+=a:blinkon0
 
 " Invisible characters
 set list
@@ -33,15 +25,21 @@ if !has("win32")
     set showbreak=↪
 endif
 
+" Remove toolbar
+set guioptions-=T
 " Show cursor coordinates
 set ruler
 " Syntax
-syntax on
+syntax enable
 " Show line numbers
 set number
 " In case the last line of the window is long, display as much of it as possible
 " instead of '@' characters
 set display+=lastline
+" Highlight current line
+set cursorline
+" Disable cursor blinking
+set guicursor+=a:blinkon0
 
 
 
@@ -53,30 +51,32 @@ set display+=lastline
 set noerrorbells visualbell t_vb=
 autocmd GUIEnter * set visualbell t_vb=
 
-" Don't use 'magic vim comments'
-set nomodeline
-
 " Enable filetype detection and filetype-specific plugins and indentation rules
 filetype plugin indent on
 set autoindent
 
-" Show partial commands as you type
-set showcmd
-
-" Briefly show matching brackets in insert mode
-set showmatch
-
-" Don't redraw screen while executing macros
-set lazyredraw
-
-" Sensible scrolling when no wrapping
-set sidescroll=1
-
-" At startup, restore buffer list and some history
-"set viminfo='100,f1,<100,:100,h,%
-
 " Allow switching to another buffer without saving
 set hidden
+" Intuitive backspace behavior
+set backspace=indent,eol,start
+" When a file was changed outside of vim and not changed in vim, reread it
+set autoread
+" Don't use 'magic vim comments'
+set nomodeline
+" Show partial commands as you type
+set showcmd
+" Briefly show matching brackets in insert mode
+set showmatch
+" Don't redraw screen while executing macros
+set lazyredraw
+" Sensible scrolling when no wrapping
+set sidescroll=1
+" At startup, restore buffer list and some history
+"set viminfo='100,f1,<100,:100,h,%
+" Do not recognize octal numbers for Ctrl-A and Ctrl-X
+set nrformats-=octal
+" Delete comment character when joining commented lines
+set formatoptions+=j
 
 " On the first tab press, display list and complete longest prefix;
 " on the second tab, display menu completion
@@ -88,22 +88,11 @@ set backupdir=~/.vim/backup//
 set directory=~/.vim/swap//
 set undodir=~/.vim/undo//
 
-" When a file was changed outside of vim and not changed in vim, reread it
-set autoread
-
 " Tabs
 set tabstop=4
 set shiftwidth=4
 set smarttab
 set expandtab
-
-" Do not recognize octal numbers for Ctrl-A and Ctrl-X
-set nrformats-=octal
-
-" Intuitive backspace behavior
-set backspace=indent,eol,start
-" Delete comment character when joining commented lines
-set formatoptions+=j
 
 " Search
 set hlsearch
@@ -124,8 +113,8 @@ let mapleader=" "
 nnoremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 nnoremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 
-nnoremap <leader>w :bd<CR>
-nnoremap <leader>h :noh<CR>
+nnoremap <silent> <leader>w :bd<CR>
+nnoremap <silent> <leader>h :noh<CR>
 nnoremap <silent> <leader>ca :call <SID>ToggleFlag('formatoptions', 'a')<CR>
 
 " CD to the directory of current file
@@ -143,27 +132,21 @@ nnoremap <C-h> <C-w>h
 
 
 " Filetype settings {{{
-" Markdown file type
 autocmd BufRead,BufNewFile *.md set filetype=markdown
 autocmd FileType markdown
   \ setlocal spell textwidth=78 formatoptions+=a |
   \ let b:noStripWhitespace=1
 
-" asciidoc file type
 autocmd BufRead,BufNewFile *.adoc set filetype=asciidoc
 autocmd FileType asciidoc
   \ setlocal spell textwidth=78 formatoptions+=n
   \ formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\\|^\\s*<\\d\\+>\\s\\+\\\\|^\\s*[a-zA-Z.]\\.\\s\\+\\\\|^\\s*[ivxIVX]\\+\\.\\s\\+
   \ comments=s1:/*,ex:*/,://,b:#,:%,:XCOMM,fb:-,fb:*,fb:+,fb:.,fb:>
 
-" yaml file type
 autocmd FileType yaml setlocal tabstop=2 shiftwidth=2
-
-" text file type
 autocmd FileType text setlocal spell textwidth=78
-
-" c++ file type
-autocmd FileType cpp setlocal commentstring=//\ %s
+autocmd FileType cpp  setlocal commentstring=//\ %s
+autocmd FileType vim  setlocal foldmethod=marker
 
 " Firefox extensions install manifest
 autocmd FileType rdf set filetype=xml
@@ -227,6 +210,8 @@ set tags=./tags;
 set cscopetag
 "   prefer ctags to cscope
 set cscopetagorder=1
+"   open quickfix window with cscope results
+set cscopequickfix=s-,c-,d-,i-,t-,e-
 "   bring up 'goto definition' dialog; faster than CtrlPTag (see below), but more false positives
 nnoremap <leader>cg :cs find g<Space>
 
