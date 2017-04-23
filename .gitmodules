@@ -16,3 +16,9 @@
 [submodule "bundle/vim-fswitch"]
 	path = bundle/vim-fswitch
 	url = https://github.com/slycelote/vim-fswitch
+[submodule "bundle/vim-commentary"]
+	path = bundle/vim-commentary
+	url = https://github.com/tpope/vim-commentary
+[submodule "bundle/vim-focusclip"]
+	path = bundle/vim-focusclip
+	url = https://github.com/idbrii/vim-focusclip
