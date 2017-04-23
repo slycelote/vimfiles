@@ -109,6 +109,11 @@ set smartcase
 " General key mappings
 let mapleader=" "
 
+inoremap jk <esc>
+inoremap jK <esc>
+inoremap Jk <esc>
+inoremap JK <esc>
+
 " Move through wrapped lines unless the command is given a count
 nnoremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 nnoremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
