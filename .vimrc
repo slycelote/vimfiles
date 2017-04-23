@@ -2,7 +2,7 @@ scriptencoding utf-8
 set encoding=utf-8
 set nocompatible
 " Remove all autocommands in case we are reloading this file
-au!
+autocmd!
 
 execute pathogen#infect()
 
@@ -134,7 +134,7 @@ nnoremap <C-h> <C-w>h
 " Filetype settings {{{
 autocmd BufRead,BufNewFile *.md set filetype=markdown
 autocmd FileType markdown
-  \ setlocal spell textwidth=78 formatoptions+=a |
+  \ setlocal spell textwidth=78 |
   \ let b:noStripWhitespace=1
 
 autocmd BufRead,BufNewFile *.adoc set filetype=asciidoc
@@ -147,10 +147,10 @@ autocmd FileType yaml setlocal tabstop=2 shiftwidth=2
 autocmd FileType text setlocal spell textwidth=78
 autocmd FileType cpp  setlocal commentstring=//\ %s
 autocmd FileType vim  setlocal foldmethod=marker
+autocmd FileType gitcommit setlocal spell
 
 " Firefox extensions install manifest
 autocmd FileType rdf set filetype=xml
-
 " help windows
 autocmd FileType help setlocal nospell
 " }}}
@@ -161,7 +161,7 @@ command! -range=% JsonFormat exe '<line1>,<line2>!' . g:python_exe . ' -m json.t
 
 " When editing a file, jump to the last known cursor position.
 autocmd BufWinEnter *
-  \ if line("'\"") > 1 && line("'\"") <= line("$") |
+  \ if &filetype != 'gitcommit' && line("'\"") > 1 && line("'\"") <= line("$") |
   \   exe "normal! g`\"" |
   \ endif
 
@@ -222,6 +222,8 @@ nnoremap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
 
 " fswitch settings
 nnoremap <silent> <leader>f :FSHere<CR>
+autocmd BufEnter *.in  let b:fswitchdst = 'out' | let b:fswitchlocs = '.'
+autocmd BufEnter *.out let b:fswitchdst = 'in'  | let b:fswitchlocs = '.'
 
 " buftabline settings
 let g:buftabline_show=1    " show only if at least 2 buffers
