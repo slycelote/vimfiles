@@ -6,12 +6,21 @@ autocmd!
 
 execute pathogen#infect()
 
+" https://gist.github.com/romainl/4df4cde3498fada91032858d7af213c2
+if !exists('g:env')
+    if has('win64') || has('win32') || has('win16')
+        let g:env = 'WINDOWS'
+    else
+        let g:env = toupper(substitute(system('uname'), '\n', '', ''))
+    endif
+endif
+
 " =============================================== "
 "                 Display options                 "
 " =============================================== "
 
 colorscheme apprentice
-if has("gui_win32")
+if has('gui') && g:env =~ 'WINDOWS'
     set guifont=Consolas:h11
 endif
 
@@ -19,7 +28,7 @@ endif
 set list
 set listchars=tab:»\ ,trail:·,extends:>,nbsp:.
 
-if !has("win32")
+if g:env !~ 'WINDOWS'
     " Indicator of wrapping text; default Windows fonts don't have a nice
     " glyph for this.
     set showbreak=↪
@@ -30,7 +39,9 @@ set guioptions-=T
 " Show cursor coordinates
 set ruler
 " Syntax
-syntax enable
+if !exists("g:syntax_on")
+    syntax enable
+endif
 " Show line numbers
 set number
 " In case the last line of the window is long, display as much of it as possible
@@ -83,10 +94,12 @@ set formatoptions+=j
 set wildmode=list:longest,full
 set wildmenu
 
+" https://stackoverflow.com/a/18734557
+let s:vim_config_dir_path = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 " Location for backup files. Note the double slash to avoid name collisions.
-set backupdir=~/.vim/backup//
-set directory=~/.vim/swap//
-set undodir=~/.vim/undo//
+let &backupdir=s:vim_config_dir_path.'/backup//'
+let &directory=s:vim_config_dir_path.'/swap//'
+let &undodir=s:vim_config_dir_path.'/undo//'
 
 " Tabs
 set tabstop=4
@@ -99,6 +112,9 @@ set hlsearch
 set incsearch
 set ignorecase
 set smartcase
+
+" Be smart in completion despite ignorecase
+set infercase
 
 
 
@@ -124,6 +140,8 @@ nnoremap <silent> <leader>ca :call <SID>ToggleFlag('formatoptions', 'a')<CR>
 
 " CD to the directory of current file
 nnoremap <leader>cd :cd %:p:h<CR>
+" Open the directory of current file
+nnoremap <silent> - :Ex<CR>
 
 " Buffer navigation
 nnoremap <M-[> :bprev<CR>
@@ -138,6 +156,7 @@ nnoremap <C-h> <C-w>h
 
 " Filetype settings {{{
 autocmd BufRead,BufNewFile *.md set filetype=markdown
+autocmd BufRead,BufNewFile *.reminders set filetype=remind
 autocmd FileType markdown
   \ setlocal spell textwidth=78 |
   \ let b:noStripWhitespace=1
@@ -158,6 +177,8 @@ autocmd FileType gitcommit setlocal spell
 autocmd FileType rdf set filetype=xml
 " help windows
 autocmd FileType help setlocal nospell
+" quickfix window
+autocmd FileType qf setlocal norelativenumber nobuflisted
 " }}}
 
 " Pretty print JSON (whole file or range)
