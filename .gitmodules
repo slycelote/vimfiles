@@ -22,3 +22,6 @@
 [submodule "bundle/vim-focusclip"]
 	path = bundle/vim-focusclip
 	url = https://github.com/idbrii/vim-focusclip
+[submodule "bundle/Apprentice"]
+	path = bundle/Apprentice
+	url = https://github.com/romainl/Apprentice
