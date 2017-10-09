@@ -1,8 +1,11 @@
 scriptencoding utf-8
 set encoding=utf-8
 set nocompatible
-" Remove all autocommands in case we are reloading this file
-autocmd!
+
+augroup vimrc
+    " Remove all autocommands in case we are reloading this file
+    autocmd!
+augroup END
 
 execute pathogen#infect()
 
@@ -60,7 +63,7 @@ set guicursor+=a:blinkon0
 
 " Disable beeping and flashing
 set noerrorbells visualbell t_vb=
-autocmd GUIEnter * set visualbell t_vb=
+autocmd vimrc GUIEnter * set visualbell t_vb=
 
 " Enable filetype detection and filetype-specific plugins and indentation rules
 filetype plugin indent on
@@ -155,30 +158,32 @@ nnoremap <C-h> <C-w>h
 
 
 " Filetype settings {{{
-autocmd BufRead,BufNewFile *.md set filetype=markdown
-autocmd BufRead,BufNewFile *.reminders set filetype=remind
-autocmd FileType markdown
-  \ setlocal spell textwidth=78 |
-  \ let b:noStripWhitespace=1
+augroup vimrc
+    autocmd BufRead,BufNewFile *.md set filetype=markdown
+    autocmd BufRead,BufNewFile *.reminders set filetype=remind
+    autocmd FileType markdown
+      \ setlocal spell textwidth=78 |
+      \ let b:noStripWhitespace=1
 
-autocmd BufRead,BufNewFile *.adoc set filetype=asciidoc
-autocmd FileType asciidoc
-  \ setlocal spell textwidth=78 formatoptions+=n
-  \ formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\\|^\\s*<\\d\\+>\\s\\+\\\\|^\\s*[a-zA-Z.]\\.\\s\\+\\\\|^\\s*[ivxIVX]\\+\\.\\s\\+
-  \ comments=s1:/*,ex:*/,://,b:#,:%,:XCOMM,fb:-,fb:*,fb:+,fb:.,fb:>
+    autocmd BufRead,BufNewFile *.adoc set filetype=asciidoc
+    autocmd FileType asciidoc
+      \ setlocal spell textwidth=78 formatoptions+=n
+      \ formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\\|^\\s*<\\d\\+>\\s\\+\\\\|^\\s*[a-zA-Z.]\\.\\s\\+\\\\|^\\s*[ivxIVX]\\+\\.\\s\\+
+      \ comments=s1:/*,ex:*/,://,b:#,:%,:XCOMM,fb:-,fb:*,fb:+,fb:.,fb:>
 
-autocmd FileType yaml setlocal tabstop=2 shiftwidth=2
-autocmd FileType text setlocal spell textwidth=78
-autocmd FileType cpp  setlocal commentstring=//\ %s
-autocmd FileType vim  setlocal foldmethod=marker
-autocmd FileType gitcommit setlocal spell
+    autocmd FileType yaml setlocal tabstop=2 shiftwidth=2
+    autocmd FileType text setlocal spell textwidth=78
+    autocmd FileType cpp  setlocal commentstring=//\ %s
+    autocmd FileType vim  setlocal foldmethod=marker
+    autocmd FileType gitcommit setlocal spell
 
-" Firefox extensions install manifest
-autocmd FileType rdf set filetype=xml
-" help windows
-autocmd FileType help setlocal nospell
-" quickfix window
-autocmd FileType qf setlocal norelativenumber nobuflisted
+    " Firefox extensions install manifest
+    autocmd FileType rdf set filetype=xml
+    " help windows
+    autocmd FileType help setlocal nospell
+    " quickfix window
+    autocmd FileType qf setlocal norelativenumber nobuflisted
+augroup END
 " }}}
 
 " Pretty print JSON (whole file or range)
@@ -186,7 +191,7 @@ let g:python_exe = 'python'
 command! -range=% JsonFormat exe '<line1>,<line2>!' . g:python_exe . ' -m json.tool'
 
 " When editing a file, jump to the last known cursor position.
-autocmd BufWinEnter *
+autocmd vimrc BufWinEnter *
   \ if &filetype != 'gitcommit' && line("'\"") > 1 && line("'\"") <= line("$") |
   \   exe "normal! g`\"" |
   \ endif
@@ -206,7 +211,7 @@ function! <SID>StripTrailingWhitespace()
     let @/ = s
     call cursor(l, c)
 endfun
-autocmd BufWritePre * call <SID>StripTrailingWhitespace()
+autocmd vimrc BufWritePre * call <SID>StripTrailingWhitespace()
 
 " Session
 set sessionoptions=blank,buffers,curdir,folds,help,resize,tabpages,winpos,winsize
@@ -248,8 +253,8 @@ nnoremap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
 
 " fswitch settings
 nnoremap <silent> <leader>f :FSHere<CR>
-autocmd BufEnter *.in  let b:fswitchdst = 'out' | let b:fswitchlocs = '.'
-autocmd BufEnter *.out let b:fswitchdst = 'in'  | let b:fswitchlocs = '.'
+autocmd vimrc BufEnter *.in  let b:fswitchdst = 'out' | let b:fswitchlocs = '.'
+autocmd vimrc BufEnter *.out let b:fswitchdst = 'in'  | let b:fswitchlocs = '.'
 
 " buftabline settings
 let g:buftabline_show=1    " show only if at least 2 buffers
