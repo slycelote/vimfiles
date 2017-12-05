@@ -119,6 +119,9 @@ set smartcase
 " Be smart in completion despite ignorecase
 set infercase
 
+" Don't open folds on { and } commands
+set foldopen-=block
+
 
 
 " =============================================== "
@@ -180,7 +183,7 @@ augroup vimrc
     " Firefox extensions install manifest
     autocmd FileType rdf set filetype=xml
     " help windows
-    autocmd FileType help setlocal nospell
+    autocmd FileType help setlocal nospell nonumber norelativenumber
     " quickfix window
     autocmd FileType qf setlocal norelativenumber nobuflisted
 augroup END
@@ -253,8 +256,10 @@ nnoremap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
 
 " fswitch settings
 nnoremap <silent> <leader>f :FSHere<CR>
-autocmd vimrc BufEnter *.in  let b:fswitchdst = 'out' | let b:fswitchlocs = '.'
-autocmd vimrc BufEnter *.out let b:fswitchdst = 'in'  | let b:fswitchlocs = '.'
+augroup vimrc
+    autocmd BufEnter *.in  let b:fswitchdst = 'out' | let b:fswitchlocs = '.'
+    autocmd BufEnter *.out let b:fswitchdst = 'in'  | let b:fswitchlocs = '.'
+augroup END
 
 " buftabline settings
 let g:buftabline_show=1    " show only if at least 2 buffers
