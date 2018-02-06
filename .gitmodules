@@ -25,3 +25,6 @@
 [submodule "bundle/Apprentice"]
 	path = bundle/Apprentice
 	url = https://github.com/romainl/Apprentice
+[submodule "bundle/vim-obsession"]
+	path = bundle/vim-obsession
+	url = https://github.com/tpope/vim-obsession
