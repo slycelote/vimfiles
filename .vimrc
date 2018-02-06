@@ -142,7 +142,7 @@ nnoremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 
 nnoremap <silent> <leader>w :bd<CR>
 nnoremap <silent> <leader>h :noh<CR>
-nnoremap <silent> <leader>ca :call <SID>ToggleFlag('formatoptions', 'a')<CR>
+nnoremap <silent> <leader>ca :call s:ToggleFlag('formatoptions', 'a')<CR>
 
 " CD to the directory of current file
 nnoremap <leader>cd :cd %:p:h<CR>
@@ -179,6 +179,7 @@ augroup vimrc
     autocmd FileType cpp  setlocal commentstring=//\ %s
     autocmd FileType vim  setlocal foldmethod=marker
     autocmd FileType gitcommit setlocal spell
+    autocmd FileType remind setlocal commentstring=#\ %s
 
     " Firefox extensions install manifest
     autocmd FileType rdf set filetype=xml
@@ -193,28 +194,45 @@ augroup END
 let g:python_exe = 'python'
 command! -range=% JsonFormat exe '<line1>,<line2>!' . g:python_exe . ' -m json.tool'
 
-" When editing a file, jump to the last known cursor position.
-autocmd vimrc BufWinEnter *
-  \ if &filetype != 'gitcommit' && line("'\"") > 1 && line("'\"") <= line("$") |
-  \   exe "normal! g`\"" |
-  \ endif
+" Save current view settings on a per-window, per-buffer basis.
+function! s:AutoSaveWinView()
+    if !exists("w:SavedBufView")
+        let w:SavedBufView = {}
+    endif
+    let w:SavedBufView[bufnr("%")] = winsaveview()
+endfunction
+
+" Restore current view settings.
+function! s:AutoRestoreWinView()
+    let buf = bufnr("%")
+    if exists("w:SavedBufView") && has_key(w:SavedBufView, buf)
+        let v = winsaveview()
+        let atStartOfFile = v.lnum == 1 && v.col == 0
+        if atStartOfFile && !&diff
+            call winrestview(w:SavedBufView[buf])
+        endif
+        unlet w:SavedBufView[buf]
+    endif
+endfunction
+
+augroup vimrc
+    " When opening a file, jump to the last known cursor position.
+    autocmd BufReadPost * if &filetype != 'gitcommit' && line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+    " Keep window position when switching buffers.
+    autocmd BufLeave * call s:AutoSaveWinView()
+    autocmd BufEnter * call s:AutoRestoreWinView()
+augroup END
 
 " Strip trailing whitespace on save
-function! <SID>StripTrailingWhitespace()
+function! s:StripTrailingWhitespace()
     if exists('b:noStripWhitespace')
         return
     endif
-    " save last search and cursor position
-    let s = @/
-    let l = line(".")
-    let c = col(".")
-    " strip the whitespace
-    %s/\s\+$//e
-    " restore search history and cursor position
-    let @/ = s
-    call cursor(l, c)
+    let l:saved_winview = winsaveview()
+    keeppatterns %s/\v\s+$//e
+    call winrestview(l:saved_winview)
 endfun
-autocmd vimrc BufWritePre * call <SID>StripTrailingWhitespace()
+autocmd vimrc BufWritePre * call s:StripTrailingWhitespace()
 
 " Session
 set sessionoptions=blank,buffers,curdir,folds,help,resize,tabpages,winpos,winsize
@@ -228,7 +246,7 @@ endfun
 command! -nargs=1 -complete=custom,ListProjects LoadProject source <args>
 
 
-function! <SID>ToggleFlag(option, flag)
+function! s:ToggleFlag(option, flag)
     exec ('let lopt = &' . a:option)
     if lopt =~ (".*" . a:flag . ".*")
         exec 'setlocal' (a:option . '-=' . a:flag)
