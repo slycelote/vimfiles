@@ -150,8 +150,9 @@ nnoremap <leader>cd :cd %:p:h<CR>
 nnoremap <silent> - :Ex<CR>
 
 " Buffer navigation
-nnoremap <M-[> :bprev<CR>
-nnoremap <M-]> :bnext<CR>
+" The empty check is to ensure that you can still use the enter key in Quickfix windows as you would normally.
+nnoremap <expr> <CR> empty(&buftype) ? ':bnext<CR>' : '<CR>'
+nnoremap <BS> :bprev<CR>
 
 " Windows navigation
 nnoremap <C-j> <C-w>j
