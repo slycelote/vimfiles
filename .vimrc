@@ -1,6 +1,5 @@
 scriptencoding utf-8
 set encoding=utf-8
-set nocompatible
 
 augroup vimrc
     " Remove all autocommands in case we are reloading this file
@@ -105,7 +104,8 @@ let &directory=s:vim_config_dir_path.'/swap//'
 let &undodir=s:vim_config_dir_path.'/undo//'
 
 " Tabs
-set tabstop=4
+set tabstop=8
+set softtabstop=4
 set shiftwidth=4
 set smarttab
 set expandtab
@@ -196,7 +196,7 @@ let g:python_exe = 'python'
 command! -range=% JsonFormat exe '<line1>,<line2>!' . g:python_exe . ' -m json.tool'
 
 " Save current view settings on a per-window, per-buffer basis.
-function! s:AutoSaveWinView()
+function! s:AutoSaveWinView() abort
     if !exists("w:SavedBufView")
         let w:SavedBufView = {}
     endif
@@ -204,7 +204,7 @@ function! s:AutoSaveWinView()
 endfunction
 
 " Restore current view settings.
-function! s:AutoRestoreWinView()
+function! s:AutoRestoreWinView() abort
     let buf = bufnr("%")
     if exists("w:SavedBufView") && has_key(w:SavedBufView, buf)
         let v = winsaveview()
@@ -225,7 +225,7 @@ augroup vimrc
 augroup END
 
 " Strip trailing whitespace on save
-function! s:StripTrailingWhitespace()
+function! s:StripTrailingWhitespace() abort
     if exists('b:noStripWhitespace')
         return
     endif
@@ -238,7 +238,7 @@ autocmd vimrc BufWritePre * call s:StripTrailingWhitespace()
 " Session
 set sessionoptions=blank,buffers,curdir,folds,help,resize,tabpages,winpos,winsize
 command! SaveProject exe "mksession! " . v:this_session
-function! ListProjects(ArgLead, CmdLine, CursorPos)
+function! ListProjects(ArgLead, CmdLine, CursorPos) abort
     let project_ext = '.vimsession'
     let session_files = globpath(g:my_projects_dir, '*' . project_ext)
     " echo session_files
@@ -247,7 +247,7 @@ endfun
 command! -nargs=1 -complete=custom,ListProjects LoadProject source <args>
 
 
-function! s:ToggleFlag(option, flag)
+function! s:ToggleFlag(option, flag) abort
     exec ('let lopt = &' . a:option)
     if lopt =~ (".*" . a:flag . ".*")
         exec 'setlocal' (a:option . '-=' . a:flag)
@@ -265,7 +265,7 @@ set cscopetag
 set cscopetagorder=1
 "   open quickfix window with cscope results
 set cscopequickfix=s-,c-,d-,i-,t-,e-
-"   bring up 'goto definition' dialog; faster than CtrlPTag (see below), but more false positives
+"   bring up 'goto definition' dialog; faster than CtrlPTag, but more false positives
 nnoremap <leader>cg :cs find g<Space>
 
 nnoremap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
@@ -284,30 +284,6 @@ augroup END
 let g:buftabline_show=1    " show only if at least 2 buffers
 let g:buftabline_numbers=1 " display buffer numbers
 "call buftabline#update(0)  " reload buftabline settings when reloading .vimrc
-
-" CtrlP settings
-"   max height of match window
-let g:ctrlp_match_window = 'max:20'
-"   search only by filename, instead of filename and path; can be toggled with <c-d>
-let g:ctrlp_by_filename = 1
-"   don't update file list on every keypress
-let g:ctrlp_lazy_update = 1
-"   allow jumping to tag
-let g:ctrlp_extensions = ['tag']
-nnoremap <leader>t :CtrlPTag<CR>
-"   buffer list
-nnoremap <leader>b :CtrlPBuffer<CR>
-"   ignore patterns, only used if ctrlp_user_command is not used
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/](\.git|\.hg|\.svn)$',
-  \ 'file': '\v\.(exe|so|dll)$',
-  \ 'link': 'some_bad_symbolic_links',
-  \ }
-let g:ctrlp_user_command = {
-  \ 'types': {
-      \ 1: ['.git', 'cd %s && git ls-files -co --exclude-standard'],
-  \ }
-  \ }
 
 " }}}
 
