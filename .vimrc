@@ -122,6 +122,10 @@ set infercase
 " Don't open folds on { and } commands
 set foldopen-=block
 
+" What to save in session files
+set sessionoptions=blank,buffers,curdir,folds,help,resize,tabpages,winpos,winsize
+
+
 
 
 " =============================================== "
@@ -181,6 +185,7 @@ augroup vimrc
     autocmd FileType vim  setlocal foldmethod=marker
     autocmd FileType gitcommit setlocal spell
     autocmd FileType remind setlocal commentstring=#\ %s
+    autocmd FileType cmake  setlocal commentstring=#\ %s
 
     " Firefox extensions install manifest
     autocmd FileType rdf set filetype=xml
@@ -235,18 +240,6 @@ function! s:StripTrailingWhitespace() abort
 endfun
 autocmd vimrc BufWritePre * call s:StripTrailingWhitespace()
 
-" Session
-set sessionoptions=blank,buffers,curdir,folds,help,resize,tabpages,winpos,winsize
-command! SaveProject exe "mksession! " . v:this_session
-function! ListProjects(ArgLead, CmdLine, CursorPos) abort
-    let project_ext = '.vimsession'
-    let session_files = globpath(g:my_projects_dir, '*' . project_ext)
-    " echo session_files
-    return session_files
-endfun
-command! -nargs=1 -complete=custom,ListProjects LoadProject source <args>
-
-
 function! s:ToggleFlag(option, flag) abort
     exec ('let lopt = &' . a:option)
     if lopt =~ (".*" . a:flag . ".*")
@@ -265,7 +258,7 @@ set cscopetag
 set cscopetagorder=1
 "   open quickfix window with cscope results
 set cscopequickfix=s-,c-,d-,i-,t-,e-
-"   bring up 'goto definition' dialog; faster than CtrlPTag, but more false positives
+"   bring up 'goto definition' dialog
 nnoremap <leader>cg :cs find g<Space>
 
 nnoremap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
@@ -283,7 +276,7 @@ augroup END
 " buftabline settings
 let g:buftabline_show=1    " show only if at least 2 buffers
 let g:buftabline_numbers=1 " display buffer numbers
-"call buftabline#update(0)  " reload buftabline settings when reloading .vimrc
+silent! call buftabline#update(0)  " reload buftabline settings when reloading .vimrc
 
 " }}}
 
