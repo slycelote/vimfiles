@@ -21,6 +21,9 @@ endif
 "                 Display options                 "
 " =============================================== "
 
+augroup vimrc
+    autocmd ColorScheme apprentice highlight Comment guifg=#707070
+augroup END
 colorscheme apprentice
 if has('gui') && g:env =~ 'WINDOWS'
     set guifont=Consolas:h11
@@ -181,18 +184,19 @@ augroup vimrc
 
     autocmd FileType yaml setlocal tabstop=2 shiftwidth=2
     autocmd FileType text setlocal spell textwidth=78
-    autocmd FileType cpp  setlocal commentstring=//\ %s
     autocmd FileType vim  setlocal foldmethod=marker
     autocmd FileType gitcommit setlocal spell
+    autocmd FileType cpp    setlocal commentstring=//\ %s
     autocmd FileType remind setlocal commentstring=#\ %s
     autocmd FileType cmake  setlocal commentstring=#\ %s
+    autocmd FileType nasm   setlocal commentstring=;\ %s
 
     " Firefox extensions install manifest
     autocmd FileType rdf set filetype=xml
     " help windows
     autocmd FileType help setlocal nospell nonumber norelativenumber
     " quickfix window
-    autocmd FileType qf setlocal norelativenumber nobuflisted
+    autocmd FileType qf setlocal nospell norelativenumber nobuflisted
 augroup END
 " }}}
 
@@ -221,9 +225,26 @@ function! s:AutoRestoreWinView() abort
     endif
 endfunction
 
+let s:no_jump_last_filetype = "gitcommit,gitrebase,svn,hgcommit"
+let s:no_jump_last_buftype = "quickfix,nofile,help"
+
+" Jump to the last known cursor position. See also vim-lastplace.
+function! s:AutoJumpToLastPosition() abort
+    if index(split(s:no_jump_last_buftype, ","), &buftype) != -1
+        return
+    endif
+
+    if index(split(s:no_jump_last_filetype, ","), &filetype) != -1
+        return
+    endif
+
+    if line("'\"") > 0 && line("'\"") <= line("$")
+        execute "normal! g`\""
+    endif
+endfunction
+
 augroup vimrc
-    " When opening a file, jump to the last known cursor position.
-    autocmd BufReadPost * if &filetype != 'gitcommit' && line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+    autocmd BufReadPost * call s:AutoJumpToLastPosition()
     " Keep window position when switching buffers.
     autocmd BufLeave * call s:AutoSaveWinView()
     autocmd BufEnter * call s:AutoRestoreWinView()
