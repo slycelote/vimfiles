@@ -21,10 +21,14 @@ endif
 "                 Display options                 "
 " =============================================== "
 
-augroup vimrc
-    autocmd ColorScheme apprentice highlight Comment guifg=#707070
-augroup END
+autocmd vimrc ColorScheme apprentice call s:TweakApprenticeColors()
+function! s:TweakApprenticeColors() abort
+    highlight Comment guifg=#686868
+    " highlight ModeMsg cterm=NONE gui=NONE
+endfunction
+
 colorscheme apprentice
+
 if has('gui') && g:env =~ 'WINDOWS'
     set guifont=Consolas:h11
 endif
@@ -56,7 +60,6 @@ set display+=lastline
 set cursorline
 " Disable cursor blinking
 set guicursor+=a:blinkon0
-
 
 
 " =============================================== "
@@ -128,6 +131,15 @@ set foldopen-=block
 " What to save in session files
 set sessionoptions=blank,buffers,curdir,folds,help,resize,tabpages,winpos,winsize
 
+set mousemodel=popup_setpos " Intuitive behavior for right click
+
+if executable('rg')
+  set grepprg=rg\ --vimgrep\ --color\ never\ --smart-case\ $*
+  set grepformat=%f:%l:%c:%m,%f:%l:%m
+elseif executable('ag')
+  set grepprg=ag\ --vimgrep\ $*
+  set grepformat^=%f:%l:%c:%m   " file:line:column:message
+endif
 
 
 
@@ -146,6 +158,9 @@ inoremap JK <esc>
 " Move through wrapped lines unless the command is given a count
 nnoremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 nnoremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
+
+" Don't display grep output and prompt to hit Return, just bring up quickfix list.
+nnoremap <leader>g :silent grep<space>
 
 nnoremap <silent> <leader>w :bd<CR>
 nnoremap <silent> <leader>h :noh<CR>
@@ -166,6 +181,9 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 nnoremap <C-h> <C-w>h
+
+" remap for normal mode in cyrillic layout
+set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
 
 
 " Filetype settings {{{
@@ -191,8 +209,6 @@ augroup vimrc
     autocmd FileType cmake  setlocal commentstring=#\ %s
     autocmd FileType nasm   setlocal commentstring=;\ %s
 
-    " Firefox extensions install manifest
-    autocmd FileType rdf set filetype=xml
     " help windows
     autocmd FileType help setlocal nospell nonumber norelativenumber
     " quickfix window
