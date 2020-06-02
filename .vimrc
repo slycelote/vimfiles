@@ -8,6 +8,8 @@ augroup END
 
 execute pathogen#infect()
 
+packadd cfilter
+
 " https://gist.github.com/romainl/4df4cde3498fada91032858d7af213c2
 if !exists('g:env')
     if has('win64') || has('win32') || has('win16')
@@ -24,6 +26,7 @@ endif
 autocmd vimrc ColorScheme apprentice call s:TweakApprenticeColors()
 function! s:TweakApprenticeColors() abort
     highlight Comment guifg=#686868
+    highlight FoldColumn guifg=#444444
     " highlight ModeMsg cterm=NONE gui=NONE
 endfunction
 
@@ -101,6 +104,9 @@ set formatoptions+=j
 " on the second tab, display menu completion
 set wildmode=list:longest,full
 set wildmenu
+
+set foldcolumn=1
+set foldlevelstart=99 " start with all folds open
 
 " https://stackoverflow.com/a/18734557
 let s:vim_config_dir_path = fnamemodify(resolve(expand('<sfile>:p')), ':h')
@@ -241,16 +247,16 @@ function! s:AutoRestoreWinView() abort
     endif
 endfunction
 
-let s:no_jump_last_filetype = "gitcommit,gitrebase,svn,hgcommit"
-let s:no_jump_last_buftype = "quickfix,nofile,help"
+let g:no_jump_last_filetype = "gitcommit,gitrebase,svn,hgcommit"
+let g:no_jump_last_buftype = "quickfix,nofile,help"
 
-" Jump to the last known cursor position. See also vim-lastplace.
+" Jump to the last known cursor position. See :h last-position-jump and vim-lastplace plugin.
 function! s:AutoJumpToLastPosition() abort
-    if index(split(s:no_jump_last_buftype, ","), &buftype) != -1
+    if index(split(g:no_jump_last_buftype, ","), &buftype) != -1
         return
     endif
 
-    if index(split(s:no_jump_last_filetype, ","), &filetype) != -1
+    if index(split(g:no_jump_last_filetype, ","), &filetype) != -1
         return
     endif
 
