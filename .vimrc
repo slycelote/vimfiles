@@ -41,32 +41,25 @@ set list
 set listchars=tab:»\ ,trail:·,extends:>,nbsp:.
 
 if g:env !~ 'WINDOWS'
-    " Indicator of wrapping text; default Windows fonts don't have a nice
-    " glyph for this.
+    " Indicator of wrapping text; default Windows fonts don't have a nice glyph for this.
     set showbreak=↪
 endif
 
-" Remove toolbar
-set guioptions-=T
-" Show cursor coordinates
-set ruler
-" Syntax
+set guioptions-=T " Remove toolbar
+set ruler " Show cursor coordinates
 if !exists("g:syntax_on")
     syntax enable
 endif
-" Show line numbers
-set number
+set number " Show line numbers
 " In case the last line of the window is long, display as much of it as possible
 " instead of '@' characters
 set display+=lastline
-" Highlight current line
-set cursorline
-" Disable cursor blinking
-set guicursor+=a:blinkon0
+set cursorline " Highlight current line
+set guicursor+=a:blinkon0 " Disable cursor blinking
 
 
 " =============================================== "
-"                 Behaviour options               "
+"            Behaviour/misc options               "
 " =============================================== "
 
 " Disable beeping and flashing
@@ -77,28 +70,17 @@ autocmd vimrc GUIEnter * set visualbell t_vb=
 filetype plugin indent on
 set autoindent
 
-" Allow switching to another buffer without saving
-set hidden
-" Intuitive backspace behavior
-set backspace=indent,eol,start
-" When a file was changed outside of vim and not changed in vim, reread it
-set autoread
-" Don't use 'magic vim comments'
-set nomodeline
-" Show partial commands as you type
-set showcmd
-" Briefly show matching brackets in insert mode
-set showmatch
-" Don't redraw screen while executing macros
-set lazyredraw
-" Sensible scrolling when no wrapping
-set sidescroll=1
-" At startup, restore buffer list and some history
-"set viminfo='100,f1,<100,:100,h,%
-" Do not recognize octal numbers for Ctrl-A and Ctrl-X
-set nrformats-=octal
-" Delete comment character when joining commented lines
-set formatoptions+=j
+set hidden " Allow switching to another buffer without saving
+set backspace=indent,eol,start " Intuitive backspace behavior
+set autoread " When a file was changed outside of vim and not changed in vim, reread it
+set nomodeline " Don't use 'magic vim comments'
+set showcmd " Show partial commands as you type
+set showmatch " Briefly show matching brackets in insert mode
+set lazyredraw " Don't redraw screen while executing macros
+set sidescroll=1 " Sensible scrolling when no wrapping
+"set viminfo='100,f1,<100,:100,h,% " At startup, restore buffer list and some history
+set nrformats-=octal " Do not recognize octal numbers for Ctrl-A and Ctrl-X
+set formatoptions+=j " Delete comment character when joining commented lines
 
 " On the first tab press, display list and complete longest prefix;
 " on the second tab, display menu completion
@@ -128,15 +110,10 @@ set incsearch
 set ignorecase
 set smartcase
 
-" Be smart in completion despite ignorecase
-set infercase
-
-" Don't open folds on { and } commands
-set foldopen-=block
-
+set infercase " Be smart in completion despite ignorecase
+set foldopen-=block " Don't open folds on { and } commands
 " What to save in session files
 set sessionoptions=blank,buffers,curdir,folds,help,resize,tabpages,winpos,winsize
-
 set mousemodel=popup_setpos " Intuitive behavior for right click
 
 if executable('rg')
@@ -153,7 +130,6 @@ endif
 "                 Key bindings                    "
 " =============================================== "
 
-" General key mappings
 let mapleader=" "
 
 inoremap jk <esc>
@@ -293,17 +269,15 @@ function! s:ToggleFlag(option, flag) abort
 endfunction
 
 " cscope and ctags {{{
-"   search tags file in the directory of current file and upwards to root
-set tags=./tags;
-"   use both ctags and cscope for definition searches
-set cscopetag
-"   prefer ctags to cscope
-set cscopetagorder=1
-"   open quickfix window with cscope results
-set cscopequickfix=s-,c-,d-,i-,t-,e-
+
+set tags=./tags; " search tags file in the directory of current file and upwards to root
+set cscopetag " use both ctags and cscope for definition searches
+set cscopetagorder=1 " prefer ctags to cscope
+set cscopequickfix=s-,c-,d-,i-,t-,e- " open quickfix window with cscope results
+
 "   bring up 'goto definition' dialog
 nnoremap <leader>cg :cs find g<Space>
-
+"   :help cscope-suggestions
 nnoremap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
 " }}}
 
