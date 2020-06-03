@@ -151,7 +151,7 @@ nnoremap <silent> <leader>ca :call s:ToggleFlag('formatoptions', 'a')<CR>
 " CD to the directory of current file
 nnoremap <leader>cd :cd %:p:h<CR>
 " Open the directory of current file
-nnoremap <silent> - :Ex<CR>
+nnoremap <silent> - :Explore<CR>
 
 " Buffer navigation
 " The empty check is to ensure that you can still use the enter key in Quickfix windows as you would normally.
@@ -170,8 +170,12 @@ set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNO
 
 " Filetype settings {{{
 augroup vimrc
-    autocmd BufRead,BufNewFile *.md set filetype=markdown
+    autocmd BufRead,BufNewFile *.tsv setlocal noexpandtab
+
     autocmd BufRead,BufNewFile *.reminders set filetype=remind
+    autocmd FileType remind setlocal commentstring=#\ %s
+
+    autocmd BufRead,BufNewFile *.md set filetype=markdown
     autocmd FileType markdown
       \ setlocal spell textwidth=78 |
       \ let b:noStripWhitespace=1
@@ -187,7 +191,6 @@ augroup vimrc
     autocmd FileType vim  setlocal foldmethod=marker
     autocmd FileType gitcommit setlocal spell
     autocmd FileType cpp    setlocal commentstring=//\ %s
-    autocmd FileType remind setlocal commentstring=#\ %s
     autocmd FileType cmake  setlocal commentstring=#\ %s
     autocmd FileType nasm   setlocal commentstring=;\ %s
 
