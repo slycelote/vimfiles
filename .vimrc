@@ -171,6 +171,7 @@ set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNO
 " Filetype settings {{{
 augroup vimrc
     autocmd BufRead,BufNewFile *.tsv setlocal noexpandtab
+    autocmd BufRead,BufNewFile *.xaml set filetype=xml
 
     autocmd BufRead,BufNewFile *.reminders set filetype=remind
     autocmd FileType remind setlocal commentstring=#\ %s
