@@ -8,7 +8,7 @@ augroup END
 
 execute pathogen#infect()
 
-packadd cfilter
+silent! packadd cfilter
 
 " https://gist.github.com/romainl/4df4cde3498fada91032858d7af213c2
 if !exists('g:env')
@@ -27,6 +27,7 @@ autocmd vimrc ColorScheme apprentice call s:TweakApprenticeColors()
 function! s:TweakApprenticeColors() abort
     highlight Comment guifg=#686868
     highlight FoldColumn guifg=#444444
+    highlight CursorLine guibg=#404040
     " highlight ModeMsg cterm=NONE gui=NONE
 endfunction
 
@@ -78,6 +79,7 @@ set showcmd " Show partial commands as you type
 set showmatch " Briefly show matching brackets in insert mode
 set lazyredraw " Don't redraw screen while executing macros
 set sidescroll=1 " Sensible scrolling when no wrapping
+set history=1000 " Keep longer history of ":" commands
 "set viminfo='100,f1,<100,:100,h,% " At startup, restore buffer list and some history
 set nrformats-=octal " Do not recognize octal numbers for Ctrl-A and Ctrl-X
 set formatoptions+=j " Delete comment character when joining commented lines
@@ -144,6 +146,8 @@ nnoremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 " Don't display grep output and prompt to hit Return, just bring up quickfix list.
 nnoremap <leader>g :silent grep<space>
 
+nnoremap <Leader>cc :cclose<CR>
+
 nnoremap <silent> <leader>w :bd<CR>
 nnoremap <silent> <leader>h :noh<CR>
 nnoremap <silent> <leader>ca :call s:ToggleFlag('formatoptions', 'a')<CR>
@@ -187,7 +191,8 @@ augroup vimrc
       \ formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\\|^\\s*<\\d\\+>\\s\\+\\\\|^\\s*[a-zA-Z.]\\.\\s\\+\\\\|^\\s*[ivxIVX]\\+\\.\\s\\+
       \ comments=s1:/*,ex:*/,://,b:#,:%,:XCOMM,fb:-,fb:*,fb:+,fb:.,fb:>
 
-    autocmd FileType yaml setlocal tabstop=2 shiftwidth=2
+    autocmd FileType yaml setlocal softtabstop=2 shiftwidth=2
+    autocmd FileType json setlocal softtabstop=2 shiftwidth=2 foldmethod=syntax
     autocmd FileType text setlocal spell textwidth=78
     autocmd FileType vim  setlocal foldmethod=marker
     autocmd FileType gitcommit setlocal spell
