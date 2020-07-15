@@ -281,6 +281,73 @@ function! s:ToggleFlag(option, flag) abort
     endif
 endfunction
 
+" SmartCloseBuffer {{{
+" Close current buffer, current window, or both, depending on what makes more
+" sense. Try not to destroy window layout.
+nnoremap <expr> <leader>w <SID>SmartCloseBuffer()
+
+" Checks if the buffer's windows are typically 'transient' and can be safely
+" closed. (E.g., quickfix or location list.)
+function! s:IsTransientBuffer(buf) abort
+    let buftype = getbufvar(a:buf, '&buftype')
+    return !empty(buftype)
+endfunction
+
+" When closing the buffer but not the window, another 'interesting' buffer
+" will be displayed in the window.
+function! s:IsInterestingBuffer(buf) abort
+    return buflisted(a:buf) && !s:IsTransientBuffer(a:buf)
+endfunction
+
+function! s:SmartCloseBuffer() abort
+    let win = win_getid()
+    let buf = winbufnr(win)
+    if s:IsTransientBuffer(buf)
+        return ":bd\n"
+    endif
+
+    let tab = win_id2tabwin(win)[0]
+    let buf_windows = win_findbuf(buf)
+    let tab_window_buffers = tabpagebuflist(tab)
+    let is_displayed_in_other_windows = len(buf_windows) > 1
+
+    if !is_displayed_in_other_windows && len(tab_window_buffers) <= 1
+        " Delete the buffer and close the window. If there are multiple open
+        " tabs, the current one will be closed.
+        return ":bd\n"
+    endif
+
+    " The buffer is displayed in multiple windows, or current tab has
+    " multiple windows. We don't want to destroy window layout.
+    let all_buffers = filter(range(1, bufnr('$')), 'v:val != buf && s:IsInterestingBuffer(v:val)')
+    let buffers_not_displayed_in_tab = filter(copy(all_buffers), 'index(tab_window_buffers, v:val) == -1')
+    if !empty(buffers_not_displayed_in_tab)
+        let candidates = buffers_not_displayed_in_tab
+    elseif !empty(all_buffers)
+        let candidates = all_buffers
+    else
+        " Current tab (and other tabs, if any) displays one or more views of the only interesting buffer,
+        " and also (potentially) non-interesting buffers.
+        return is_displayed_in_other_windows ? "<C-W>c" : ":bd\n"
+    endif
+
+    " Try alternate buffer first, otherwise arbitrary candidate.
+    let another_buf = bufnr('#')
+    if index(candidates, another_buf) == -1
+        let another_buf = candidates[0]
+    endif
+
+    " Switch to another interesting buffer.
+    let res = ":b" . string(another_buf)
+    if !is_displayed_in_other_windows
+        " We can delete the buffer without destroying window layout.
+        let res .= "|bd#"
+    endif
+    let res .= "\n"
+    return res
+endfunction
+" }}}
+
 " cscope and ctags {{{
 
 set tags=./tags; " search tags file in the directory of current file and upwards to root
