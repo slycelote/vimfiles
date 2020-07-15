@@ -25,6 +25,7 @@ endif
 
 autocmd vimrc ColorScheme apprentice call s:TweakApprenticeColors()
 function! s:TweakApprenticeColors() abort
+    set background=dark
     highlight Comment guifg=#686868
     highlight FoldColumn guifg=#444444
     highlight CursorLine guibg=#404040
@@ -179,6 +180,9 @@ augroup vimrc
 
     autocmd BufRead,BufNewFile *.reminders set filetype=remind
     autocmd FileType remind setlocal commentstring=#\ %s
+
+    autocmd BufRead,BufNewFile *.gv set filetype=dot
+    autocmd FileType dot    setlocal commentstring=//\ %s
 
     autocmd BufRead,BufNewFile *.md set filetype=markdown
     autocmd FileType markdown
