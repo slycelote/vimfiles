@@ -25,3 +25,6 @@
 [submodule "bundle/vim-obsession"]
 	path = bundle/vim-obsession
 	url = https://github.com/tpope/vim-obsession
+[submodule "bundle/cabal-project-vim"]
+	path = bundle/cabal-project-vim
+	url = https://github.com/vmchale/cabal-project-vim

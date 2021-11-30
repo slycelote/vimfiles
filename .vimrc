@@ -79,7 +79,7 @@ set nomodeline " Don't use 'magic vim comments'
 set showcmd " Show partial commands as you type
 set showmatch " Briefly show matching brackets in insert mode
 set lazyredraw " Don't redraw screen while executing macros
-set sidescroll=1 " Sensible scrolling when no wrapping
+set sidescroll=1 " 'Smooth' horizontal scrolling
 set history=1000 " Keep longer history of ":" commands
 "set viminfo='100,f1,<100,:100,h,% " At startup, restore buffer list and some history
 set nrformats-=octal " Do not recognize octal numbers for Ctrl-A and Ctrl-X
@@ -169,6 +169,26 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 nnoremap <C-h> <C-w>h
 
+" gdb settings {{{
+if executable('gdb')
+    let g:termdebug_wide=1
+    packadd termdebug
+    nnoremap <C-F5> :Run<CR>
+    nnoremap <F5> :Continue<CR>
+    nnoremap <S-F5> :call TermDebugSendCommand("set confirm off\nquit")<CR>
+    nnoremap <F9> :Break<CR>
+    nnoremap <S-F9> :Clear<CR>
+    nnoremap <F10> :Over<CR>
+    nnoremap <C-F10> :call TermDebugSendCommand("advance -source " . expand("%:p") . " -line " . line("."))<CR>
+    nnoremap <F11> :Step<CR>
+    nnoremap <S-F11> :Finish<CR>
+
+    command! -nargs=* SGdb :call TermDebugSendCommand(<q-args>)
+    nnoremap <Leader>d :SGdb<Space>
+endif
+
+" }}}
+
 " remap for normal mode in cyrillic layout
 set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
 
@@ -203,6 +223,13 @@ augroup vimrc
     autocmd FileType cpp    setlocal commentstring=//\ %s
     autocmd FileType cmake  setlocal commentstring=#\ %s
     autocmd FileType nasm   setlocal commentstring=;\ %s
+    autocmd FileType inform setlocal commentstring=\!\ %s suffixesadd+=.h |
+        \ syn keyword informLibVariable  lookmode
+    autocmd FileType haskell setlocal suffixesadd=.hs includeexpr=substitute(v:fname,'\\.','/','g') include=^import\\s*\\(qualified\\)\\?\\s*
+    autocmd FileType cabal  setlocal commentstring=--\ %s
+    autocmd FileType smt2   setlocal commentstring=;\ %s
+    autocmd FileType sh,bash setlocal isfname+=^=
+    autocmd FileType fish setlocal iskeyword-=/
 
     " help windows
     autocmd FileType help setlocal nospell nonumber norelativenumber
