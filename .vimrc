@@ -1,6 +1,5 @@
 scriptencoding utf-8
 set encoding=utf-8
-
 augroup vimrc
     " Remove all autocommands in case we are reloading this file
     autocmd!
@@ -127,6 +126,13 @@ elseif executable('ag')
   set grepformat^=%f:%l:%c:%m   " file:line:column:message
 endif
 
+augroup vimrc
+    " Open quickfix window automatically after relevant commands.
+    autocmd QuickFixCmdPost [^l]* cwindow
+    autocmd QuickFixCmdPost l* lwindow
+    " Automatically close corresponding loclist when quitting a window.
+    autocmd QuitPre * if &filetype != 'qf' | silent! lclose | endif
+augroup END
 
 
 " =============================================== "
@@ -160,8 +166,8 @@ nnoremap <silent> - :Explore<CR>
 
 " Buffer navigation
 " The empty check is to ensure that you can still use the enter key in Quickfix windows as you would normally.
-nnoremap <expr> <CR> empty(&buftype) ? ':bnext<CR>' : '<CR>'
-nnoremap <BS> :bprev<CR>
+nnoremap <expr> <silent> <CR> &buflisted ? ':bnext<CR>' : '<CR>'
+nnoremap <silent> <BS> :bprev<CR>
 
 " Windows navigation
 nnoremap <C-j> <C-w>j
@@ -188,9 +194,6 @@ if executable('gdb')
 endif
 
 " }}}
-
-" remap for normal mode in cyrillic layout
-set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
 
 
 " Filetype settings {{{
@@ -230,6 +233,8 @@ augroup vimrc
     autocmd FileType smt2   setlocal commentstring=;\ %s
     autocmd FileType sh,bash setlocal isfname+=^=
     autocmd FileType fish setlocal iskeyword-=/
+    " \n at end of file in a mustache partial leads to a \n in the primary template
+    autocmd BufRead,BufNewFile *.mustache setlocal noeol nofixeol
 
     " help windows
     autocmd FileType help setlocal nospell nonumber norelativenumber
@@ -355,6 +360,13 @@ function! s:SmartCloseBuffer() abort
     else
         " Current tab (and other tabs, if any) displays one or more views of the only interesting buffer,
         " and also (potentially) non-interesting buffers.
+        " TODO: what to do here?
+        "
+        " Close current view (and delete the buffer if it's possible to keep
+        " window layout in other tabs.)
+        " let is_displayed_in_other_tabs = !empty(filter(buf_windows, 'win_id2tabwin(v:val)[0] != tab'))
+        " return is_displayed_in_other_tabs ? "<C-W>c" : ":bd\n"
+        "
         return is_displayed_in_other_windows ? "<C-W>c" : ":bd\n"
     endif
 
@@ -401,6 +413,11 @@ augroup END
 let g:buftabline_show=1    " show only if at least 2 buffers
 let g:buftabline_numbers=1 " display buffer numbers
 silent! call buftabline#update(0)  " reload buftabline settings when reloading .vimrc
+
+" obsession settings
+augroup vimrc
+    autocmd User ObsessionPre let g:obsession_append = ['set path='.&path]
+augroup END
 
 " }}}
 
