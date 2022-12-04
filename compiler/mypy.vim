@@ -3,5 +3,5 @@ if exists("current_compiler")
 endif
 let current_compiler = "mypy"
 
-CompilerSet makeprg=mypy\ --disallow-untyped-defs\ %:S
+CompilerSet makeprg=mypy\ --strict\ --warn-unreachable\ %:S
 

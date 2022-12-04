@@ -106,7 +106,7 @@ set smartcase
 set infercase " Be smart in completion despite ignorecase
 set foldopen-=block " Don't open folds on { and } commands
 " What to save in session files
-set sessionoptions=blank,buffers,curdir,folds,help,resize,tabpages,winpos,winsize
+set sessionoptions-=options
 set mousemodel=popup_setpos " Intuitive behavior for right click
 
 if executable('rg')
