@@ -22,15 +22,6 @@ endif
 "                 Display options                 "
 " =============================================== "
 
-autocmd vimrc ColorScheme apprentice call s:TweakApprenticeColors()
-function! s:TweakApprenticeColors() abort
-    set background=dark
-    highlight Comment guifg=#686868
-    highlight FoldColumn guifg=#444444
-    highlight CursorLine guibg=#404040
-    " highlight ModeMsg cterm=NONE gui=NONE
-endfunction
-
 colorscheme apprentice
 
 if has('gui') && g:env =~ 'WINDOWS'
