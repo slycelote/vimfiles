@@ -31,3 +31,6 @@
 [submodule "bundle/vim-hugefile"]
 	path = bundle/vim-hugefile
 	url = https://github.com/mhinz/vim-hugefile
+[submodule "bundle/ledger-vim"]
+	path = bundle/ledger-vim
+	url = https://github.com/ziman/ledger-vim

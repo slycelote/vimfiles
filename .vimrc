@@ -224,6 +224,7 @@ augroup vimrc
     autocmd FileType smt2   setlocal commentstring=;\ %s
     autocmd FileType sh,bash setlocal isfname+=^=
     autocmd FileType fish setlocal iskeyword-=/
+    autocmd FileType ledger setlocal commentstring=;\ %s
     " \n at end of file in a mustache partial leads to a \n in the primary template
     autocmd BufRead,BufNewFile *.mustache setlocal noeol nofixeol
 
