@@ -107,6 +107,7 @@ set infercase " Be smart in completion despite ignorecase
 set foldopen-=block " Don't open folds on { and } commands
 " What to save in session files
 set sessionoptions-=options
+set sessionoptions+=winpos,resize
 set mousemodel=popup_setpos " Intuitive behavior for right click
 
 if executable('rg')
@@ -209,7 +210,9 @@ augroup vimrc
       \ formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\\|^\\s*<\\d\\+>\\s\\+\\\\|^\\s*[a-zA-Z.]\\.\\s\\+\\\\|^\\s*[ivxIVX]\\+\\.\\s\\+
       \ comments=s1:/*,ex:*/,://,b:#,:%,:XCOMM,fb:-,fb:*,fb:+,fb:.,fb:>
 
+    autocmd BufRead,BufNewFile .ansible-lint set filetype=yaml
     autocmd FileType yaml setlocal softtabstop=2 shiftwidth=2
+
     autocmd FileType json setlocal softtabstop=2 shiftwidth=2 foldmethod=syntax
     autocmd FileType text setlocal spell textwidth=78
     autocmd FileType vim  setlocal foldmethod=marker
@@ -222,7 +225,7 @@ augroup vimrc
     autocmd FileType haskell setlocal suffixesadd=.hs includeexpr=substitute(v:fname,'\\.','/','g') include=^import\\s*\\(qualified\\)\\?\\s*
     autocmd FileType cabal  setlocal commentstring=--\ %s
     autocmd FileType smt2   setlocal commentstring=;\ %s
-    autocmd FileType sh,bash setlocal isfname+=^=
+    autocmd FileType sh,bash setlocal isfname+=^= softtabstop=2 shiftwidth=2
     autocmd FileType fish setlocal iskeyword-=/
     autocmd FileType ledger setlocal commentstring=;\ %s
     " \n at end of file in a mustache partial leads to a \n in the primary template
