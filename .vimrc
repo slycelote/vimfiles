@@ -83,12 +83,14 @@ set wildmenu
 set foldcolumn=1
 set foldlevelstart=99 " start with all folds open
 
-" https://stackoverflow.com/a/18734557
-let s:vim_config_dir_path = fnamemodify(resolve(expand('<sfile>:p')), ':h')
-" Location for backup files. Note the double slash to avoid name collisions.
-let &backupdir=s:vim_config_dir_path.'/backup//'
-let &directory=s:vim_config_dir_path.'/swap//'
-let &undodir=s:vim_config_dir_path.'/undo//'
+if !has('nvim')
+    " https://stackoverflow.com/a/18734557
+    let s:vim_config_dir_path = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+    " Location for backup files. Note the double slash to avoid name collisions.
+    let &backupdir=s:vim_config_dir_path.'/backup//'
+    let &directory=s:vim_config_dir_path.'/swap//'
+    let &undodir=s:vim_config_dir_path.'/undo//'
+endif
 
 " Tabs
 set tabstop=8
