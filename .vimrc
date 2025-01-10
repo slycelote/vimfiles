@@ -115,6 +115,9 @@ set mousemodel=popup_setpos " Intuitive behavior for right click
 if executable('rg')
   set grepprg=rg\ --vimgrep\ --color\ never\ --smart-case\ $*
   set grepformat=%f:%l:%c:%m,%f:%l:%m
+elseif executable('ug')
+  set grepprg=ug\ -Hrnk\ --tabs=1\ --sort\ $*
+  set grepformat=%f:%l:%c:%m,%f+%l+%c+%m,%-G%f\\\|%l\\\|%c\\\|%m
 elseif executable('ag')
   set grepprg=ag\ --vimgrep\ $*
   set grepformat^=%f:%l:%c:%m   " file:line:column:message
