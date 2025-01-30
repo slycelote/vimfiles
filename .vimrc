@@ -24,7 +24,7 @@ endif
 
 colorscheme apprentice
 
-if has('gui') && g:env =~ 'WINDOWS'
+if has('gui_running') && g:env =~ 'WINDOWS'
     set guifont=Consolas:h11
 endif
 
@@ -74,6 +74,7 @@ set history=1000 " Keep longer history of ":" commands
 "set viminfo='100,f1,<100,:100,h,% " At startup, restore buffer list and some history
 set nrformats-=octal " Do not recognize octal numbers for Ctrl-A and Ctrl-X
 set formatoptions+=j " Delete comment character when joining commented lines
+set splitright " Vertically split windows appear on the right
 
 " On the first tab press, display list and complete longest prefix;
 " on the second tab, display menu completion
@@ -111,6 +112,9 @@ set foldopen-=block " Don't open folds on { and } commands
 set sessionoptions-=options
 set sessionoptions+=winpos,resize
 set mousemodel=popup_setpos " Intuitive behavior for right click
+if !has('gui_running')
+    set mouse=nvi
+endif
 
 if executable('rg')
   set grepprg=rg\ --vimgrep\ --color\ never\ --smart-case\ $*
@@ -150,9 +154,9 @@ nnoremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 " Don't display grep output and prompt to hit Return, just bring up quickfix list.
 nnoremap <leader>g :silent grep<space>
 
-nnoremap <Leader>cc :cclose<CR>
+nnoremap <leader>cc :cclose<CR>
 
-nnoremap <silent> <leader>w :bd<CR>
+" nnoremap <silent> <leader>w :bd<CR>
 nnoremap <silent> <leader>h :noh<CR>
 nnoremap <silent> <leader>ca :call s:ToggleFlag('formatoptions', 'a')<CR>
 
@@ -160,6 +164,8 @@ nnoremap <silent> <leader>ca :call s:ToggleFlag('formatoptions', 'a')<CR>
 nnoremap <leader>cd :cd %:p:h<CR>
 " Open the directory of current file
 nnoremap <silent> - :Explore<CR>
+
+nnoremap <silent> <leader>r :redraw!<CR>
 
 " Buffer navigation
 " The empty check is to ensure that you can still use the enter key in Quickfix windows as you would normally.
@@ -187,7 +193,7 @@ if executable('gdb')
     nnoremap <S-F11> :Finish<CR>
 
     command! -nargs=* SGdb :call TermDebugSendCommand(<q-args>)
-    nnoremap <Leader>d :SGdb<Space>
+    nnoremap <leader>d :SGdb<Space>
 endif
 
 " }}}
