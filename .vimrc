@@ -396,9 +396,11 @@ endfunction
 " cscope and ctags {{{
 
 set tags=./tags; " search tags file in the directory of current file and upwards to root
-set cscopetag " use both ctags and cscope for definition searches
-set cscopetagorder=1 " prefer ctags to cscope
-set cscopequickfix=s-,c-,d-,i-,t-,e- " open quickfix window with cscope results
+if !has('nvim')
+    set cscopetag " use both ctags and cscope for definition searches
+    set cscopetagorder=1 " prefer ctags to cscope
+    set cscopequickfix=s-,c-,d-,i-,t-,e- " open quickfix window with cscope results
+endif
 
 "   bring up 'goto definition' dialog
 nnoremap <leader>cg :cs find g<Space>
