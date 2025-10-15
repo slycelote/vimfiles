@@ -181,7 +181,8 @@ nnoremap <C-h> <C-w>h
 " gdb settings {{{
 if executable('gdb')
     let g:termdebug_wide=1
-    packadd termdebug
+    " https://github.com/vim/vim/issues/15058#issuecomment-2180989444
+    packadd! termdebug
     nnoremap <C-F5> :Run<CR>
     nnoremap <F5> :Continue<CR>
     nnoremap <S-F5> :call TermDebugSendCommand("set confirm off\nquit")<CR>
